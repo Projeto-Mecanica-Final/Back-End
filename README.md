@@ -1,6 +1,6 @@
 # Back-End
 
-O backend está localizado no projeto Mecanica20-master e utiliza Java com Spring Boot. Para executá-lo, é necessário possuir o Java 21 instalado O projeto inclui o Maven Wrapper, o que permite a execução sem a necessidade de instalar o Maven manualmente.
+O backend está localizado no projeto Back-End-Main e utiliza Java com Spring Boot. Para executá-lo, é necessário possuir o Java 21 instalado O projeto inclui o Maven Wrapper, o que permite a execução sem a necessidade de instalar o Maven manualmente.
 
 Para iniciar o backend, abra um terminal no diretório. Em sistemas Windows, utilize o comando:
 

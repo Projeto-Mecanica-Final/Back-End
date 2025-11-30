@@ -49,6 +49,20 @@ public class DataLoader {
             usuarioRepository.save(admin);
             System.out.println("Admin criado: " + admin.getEmail());
 
+            UsuarioModel admin2 = UsuarioModel.builder()
+                    .nmUsuario("Elessandro de Abreu")
+                    .email("elessandro_abreu@estudante.sesisenai.org.br")
+
+                    .provider(AuthProvider.GOOGLE)
+                    .roles(Set.of(UserRole.ROLE_ADMIN))
+                    .telefone("(48) 99999-0002")
+                    .cpf("059.354.989-95")
+                    .ativo(true)
+                    .build();
+
+            usuarioRepository.save(admin2);
+            System.out.println("Admin criado: " + admin2.getEmail());
+
             UsuarioModel atendente = UsuarioModel.builder()
                     .nmUsuario("Maria Atendente Santos")
                     .email("atendente@oficina.com")
@@ -80,6 +94,9 @@ public class DataLoader {
             System.out.println("ADMIN");
             System.out.println("   Email: admin@oficina.com");
             System.out.println("   Senha: senha123");
+            System.out.println("ADMIN");
+            System.out.println("   Email: elessandro_abreu@estudante.sesisenai.org.br");
+            System.out.println("   Senha: Google");
             System.out.println();
             System.out.println("ATENDENTE");
             System.out.println("   Email: atendente@oficina.com");

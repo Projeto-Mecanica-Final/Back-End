@@ -41,7 +41,7 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'ATENDENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ATENDENTE', 'MECANICO')")
     @Operation(summary = "Listar todos os agendamentos")
     public ResponseEntity<List<AgendamentoResponseDTO>> listarTodos() {
         List<AgendamentoResponseDTO> response = agendamentoService.listarTodos();

@@ -15,3 +15,6 @@ Caso o Maven esteja instalado no sistema e prefira utilizá-lo, o comando é:
 mvn spring-boot:run
 
 O backend iniciará normalmente em http://localhost:8084
+
+
+(BACK END ESTRUTURADO EM OUTROS PROJETOS, UNIFICADO E MANDADO NESSA ORGANIZAÇÃO PARA FAZER A PADRONIZAÇÃO CORRETA DOS CODIGOS: BACK-END'S: Maicon, Pedro,Elessandro)

@@ -36,29 +36,26 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) throws IOException {
 
         if (response.isCommitted()) {
-            log.warn("Response já foi committed. Não é possível redirecionar.");
+            log.warn("Response already committed");
             return;
         }
 
         try {
-
             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
             String email = oAuth2User.getAttribute("email");
-            String name = oAuth2User.getAttribute("name");
             String providerId = oAuth2User.getAttribute("sub");
 
-            log.info("Autenticação Google bem-sucedida para: {}", email);
-
+            log.info("OAuth2 authentication successful for: {}", email);
 
             UsuarioModel usuario = usuarioRepository.findByEmail(email).orElse(null);
 
-
             if (usuario == null) {
-                log.error("Usuário não encontrado no banco: {}", email);
+                log.error("User not found in database: {}", email);
+
                 String errorUrl = UriComponentsBuilder
                         .fromUriString(frontendUrl + "/auth/login")
                         .queryParam("error", "user_not_registered")
-                        .queryParam("message", "Usuário não cadastrado. Contate o administrador.")
+                        .queryParam("tipo", "info")
                         .build()
                         .toUriString();
 
@@ -66,16 +63,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 return;
             }
 
-            log.info("Usuário encontrado: {} | Roles: {}", usuario.getEmail(), usuario.getRoles());
-
-
             if (usuario.getProvider() != AuthProvider.GOOGLE) {
-                log.info("Atualizando provider do usuário para GOOGLE");
                 usuario.setProvider(AuthProvider.GOOGLE);
                 usuario.setProviderId(providerId);
                 usuarioRepository.save(usuario);
             }
-
 
             Set<SimpleGrantedAuthority> authorities = usuario.getRoles().stream()
                     .map(role -> new SimpleGrantedAuthority(role.name()))
@@ -83,27 +75,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
             String token = tokenProvider.generateTokenFromEmailAndRoles(usuario.getEmail(), authorities);
 
-            log.info("Token JWT gerado: {}...", token.substring(0, 20));
-
-
             String redirectUrl = UriComponentsBuilder
                     .fromUriString(frontendUrl + "/auth/callback")
                     .queryParam("token", token)
                     .build()
                     .toUriString();
 
-            log.info("🔗 Redirecionando para: {}", redirectUrl);
-
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);
 
         } catch (Exception e) {
-            log.error("Erro no OAuth2 Success Handler: {}", e.getMessage(), e);
-
+            log.error("Error in OAuth2 authentication: {}", e.getMessage());
 
             String errorUrl = UriComponentsBuilder
                     .fromUriString(frontendUrl + "/auth/login")
                     .queryParam("error", "google_auth_failed")
-                    .queryParam("message", "Erro na autenticação. Tente novamente.")
+                    .queryParam("tipo", "error")
                     .build()
                     .toUriString();
 

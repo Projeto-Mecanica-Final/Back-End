@@ -129,4 +129,14 @@ public class OrdemServicoController {
         ordemServicoService.cancelar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ATENDENTE')")
+    @Operation(summary = "Excluir ordem de serviço ou orçamento")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        ordemServicoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

@@ -348,7 +348,7 @@ public class OrdemServicoService {
             String diagnostico,
             Double vlMaoObraExtra
     ) {
-        log.info("🔄 Atualizando dados da ordem #{}", cdOrdemServico);
+        log.info("Atualizando dados da ordem #{}", cdOrdemServico);
 
 
         OrdemServicoModel ordem = ordemServicoRepository.findById(cdOrdemServico)
@@ -389,7 +389,7 @@ public class OrdemServicoService {
                 faturamento.setDataVenda(LocalDateTime.now());
                 faturamentoRepository.save(faturamento);
 
-                log.info("💰 Faturamento atualizado automaticamente!");
+                log.info("Faturamento atualizado automaticamente!");
             }
         }
 
@@ -417,6 +417,48 @@ public class OrdemServicoService {
 
         return converterParaResponseDTO(
                 ordemServicoRepository.findByIdWithItens(atualizada.getCdOrdemServico()));
+    }
+
+    @Transactional
+    public void deletar(Integer id) {
+        OrdemServicoModel ordem = ordemServicoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ordem de serviço não encontrada"));
+
+        if (ordem.getStatus() == Status.CONCLUIDO) {
+            throw new RuntimeException("Não é possível excluir uma ordem concluída. O faturamento já foi gerado.");
+        }
+
+        boolean devolverEstoque = ordem.getTipoOrdemOrcamento() == TipoOrdemOrcamento.ORDEM_DE_SERVICO
+                || ordem.getAprovado();
+
+        if (devolverEstoque) {
+            List<ItemOrdemServicoModel> itens = itemOrdemServicoRepository
+                    .findByOrdemServico_CdOrdemServico(id);
+
+            for (ItemOrdemServicoModel item : itens) {
+                if (item.getProduto() != null) {
+                    ProdutoModel produto = item.getProduto();
+                    produto.setQtdEstoque(produto.getQtdEstoque() + item.getQuantidade());
+                    produtoRepository.save(produto);
+                }
+            }
+        }
+
+        List<AgendamentoModel> agendamentos =
+                agendamentoRepository.findByOrdemServico_CdOrdemServico(id);
+
+        if (!agendamentos.isEmpty()) {
+            agendamentoRepository.deleteAll(agendamentos);
+        }
+
+        List<ItemOrdemServicoModel> itens = itemOrdemServicoRepository
+                .findByOrdemServico_CdOrdemServico(id);
+
+        if (!itens.isEmpty()) {
+            itemOrdemServicoRepository.deleteAll(itens);
+        }
+
+        ordemServicoRepository.delete(ordem);
     }
 
     private OrdemServicoResponseDTO converterParaResponseDTO(OrdemServicoModel ordem) {

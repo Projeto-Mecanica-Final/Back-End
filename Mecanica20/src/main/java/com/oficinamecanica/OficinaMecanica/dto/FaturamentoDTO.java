@@ -8,5 +8,6 @@ public record FaturamentoDTO(
         Integer cdOrdemServico,
         String dataVenda,
         Double vlTotal,
-        FormaPagamento formaPagamento
+        FormaPagamento formaPagamento,
+        String cliente
 ) {}

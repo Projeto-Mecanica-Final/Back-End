@@ -64,13 +64,27 @@ public class FaturamentoService {
     }
 
     private FaturamentoDTO converterParaDTO(FaturamentoModel faturamento) {
+        String nomeCliente = null;
+
+        if (faturamento.getVenda() != null &&
+                faturamento.getVenda().getClienteModel() != null) {
+            nomeCliente = faturamento.getVenda().getClienteModel().getNmCliente();
+        }
+
+        if (nomeCliente == null &&
+                faturamento.getOrdemServico() != null &&
+                faturamento.getOrdemServico().getClienteModel() != null) {
+            nomeCliente = faturamento.getOrdemServico().getClienteModel().getNmCliente();
+        }
+
         return new FaturamentoDTO(
                 faturamento.getCdFaturamento(),
                 faturamento.getVenda() != null ? faturamento.getVenda().getCdVenda() : null,
                 faturamento.getOrdemServico() != null ? faturamento.getOrdemServico().getCdOrdemServico() : null,
-                faturamento.getDataVenda().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                faturamento.getDataVenda().toString(),
                 faturamento.getVlTotal(),
-                faturamento.getFormaPagamento()
+                faturamento.getFormaPagamento(),
+                nomeCliente
         );
     }
 }

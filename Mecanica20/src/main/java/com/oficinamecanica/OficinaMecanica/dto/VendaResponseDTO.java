@@ -18,8 +18,8 @@ public record VendaResponseDTO(
     public record ClienteBasicDTO(
             Integer cdCliente,
             String nmCliente,
-            String nuCPF,
-            String nuTelefone,
+            String cpf,
+            String Telefone,
             String email
     ) {}
 

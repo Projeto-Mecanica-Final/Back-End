@@ -13,13 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service responsável pela lógica de negócio de Veículos
- * Gerencia: carros, motos e outros veículos dos clientes
- *
- * IMPORTANTE: Veículo usa HARD DELETE (remove do banco)
- * diferente de Cliente/Produto que usam Soft Delete
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -67,7 +60,7 @@ public class VeiculoService {
 
     @Transactional(readOnly = true)
     public List<VeiculoDTO> listarTodos() {
-        log.info("📋 Listando todos os veículos");
+        log.info("Listando todos os veículos");
 
         return veiculoRepository.findAll().stream()
                 .map(this::converterParaDTO)
@@ -85,7 +78,7 @@ public class VeiculoService {
 
     @Transactional
     public VeiculoDTO atualizar(Integer id, VeiculoDTO dto) {
-        log.info("🔄 Atualizando veículo ID: {}", id);
+        log.info("Atualizando veículo ID: {}", id);
 
         VeiculoModel veiculo = veiculoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));

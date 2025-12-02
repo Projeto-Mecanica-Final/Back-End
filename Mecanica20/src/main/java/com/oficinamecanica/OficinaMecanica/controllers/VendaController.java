@@ -69,8 +69,8 @@ public class VendaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ATENDENTE')")
     @Operation(summary = "Listar vendas por período")
     public ResponseEntity<List<VendaResponseDTO>> listarPorPeriodo(
-                                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
-                                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
         List<VendaResponseDTO> response = vendaService.listarPorPeriodo(dataInicio, dataFim);
         return ResponseEntity.ok(response);
     }

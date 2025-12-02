@@ -28,7 +28,7 @@ public class AgendamentoService {
 
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
-        log.info("📅 Criando agendamento para cliente: {}", dto.cdCliente());
+        log.info("Criando agendamento para cliente: {}", dto.cdCliente());
 
         ClienteModel cliente = clienteRepository.findById(dto.cdCliente())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
@@ -59,7 +59,7 @@ public class AgendamentoService {
                 .mecanico(mecanico)
                 .dataAgendamento(dto.dataAgendamento())
                 .observacoes(dto.observacoes())
-                .status(Status.AGENDADO) // ✅ Status inicial sempre AGENDADO
+                .status(Status.AGENDADO)
                 .build();
 
         AgendamentoModel salvo = agendamentoRepository.save(agendamento);
@@ -99,7 +99,7 @@ public class AgendamentoService {
         if (os.getStatus() != novoStatus) {
             os.setStatus(novoStatus);
             ordemServicoRepository.save(os);
-            log.info("🔗 OS {} sincronizada: {}", os.getCdOrdemServico(), novoStatus);
+            log.info("OS {} sincronizada: {}", os.getCdOrdemServico(), novoStatus);
         }
     }
 
@@ -112,7 +112,7 @@ public class AgendamentoService {
 
     @Transactional(readOnly = true)
     public List<AgendamentoResponseDTO> listarTodos() {
-        log.info("📋 Listando todos os agendamentos");
+        log.info("Listando todos os agendamentos");
 
         List<AgendamentoModel> agendamentos = agendamentoRepository.findAll();
 
@@ -138,7 +138,7 @@ public class AgendamentoService {
 
     @Transactional
     public AgendamentoResponseDTO atualizar(Integer id, AgendamentoRequestDTO dto) {
-        log.info("🔄 Atualizando agendamento ID: {}", id);
+        log.info("Atualizando agendamento ID: {}", id);
 
         AgendamentoModel agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
@@ -163,7 +163,7 @@ public class AgendamentoService {
 
     @Transactional
     public void cancelar(Integer id) {
-        log.info("🚫 Cancelando agendamento ID: {}", id);
+        log.info("Cancelando agendamento ID: {}", id);
         atualizarStatus(id, Status.CANCELADO);
     }
 

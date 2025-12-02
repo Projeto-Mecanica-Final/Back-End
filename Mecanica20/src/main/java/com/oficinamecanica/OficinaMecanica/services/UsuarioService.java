@@ -23,7 +23,7 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioDTO dto) {
-        log.info("👤 Criando usuário: {}", dto.email());
+        log.info("Criando usuário: {}", dto.email());
 
         if (usuarioRepository.existsByEmail(dto.email())) {
             throw new RuntimeException("Email já cadastrado");

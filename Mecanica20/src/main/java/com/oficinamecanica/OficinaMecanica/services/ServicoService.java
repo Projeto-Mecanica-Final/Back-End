@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service responsável pela lógica de negócio de Serviços
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -49,7 +46,7 @@ public class ServicoService {
 
     @Transactional(readOnly = true)
     public List<ServicoDTO> listarAtivos() {
-        log.info("📋 Listando serviços ativos");
+        log.info("Listando serviços ativos");
 
         return servicoRepository.findByAtivoTrue().stream()
                 .map(this::converterParaDTO)

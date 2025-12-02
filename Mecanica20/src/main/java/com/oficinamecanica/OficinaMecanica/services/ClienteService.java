@@ -11,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service responsável pela lógica de negócio de Clientes
- * Gerencia: criar, buscar, atualizar e deletar clientes
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,7 +20,7 @@ public class ClienteService {
 
     @Transactional
     public ClienteDTO criar(ClienteDTO dto) {
-        log.info("👤 Criando cliente: {}", dto.nmCliente());
+        log.info("Criando cliente: {}", dto.nmCliente());
 
         if (dto.cpf() != null && clienteRepository.existsByCpf(dto.cpf())) {
             throw new RuntimeException("CPF já cadastrado");
@@ -60,7 +56,7 @@ public class ClienteService {
 
     @Transactional(readOnly = true)
     public List<ClienteDTO> listarAtivos() {
-        log.info("📋 Listando clientes ativos");
+        log.info("Listando clientes ativos");
 
         return clienteRepository.findByAtivoTrue().stream()
                 .map(this::converterParaDTO)
@@ -90,7 +86,7 @@ public class ClienteService {
 
     @Transactional
     public ClienteDTO atualizar(Integer id, ClienteDTO dto) {
-        log.info("🔄 Atualizando cliente ID: {}", id);
+        log.info("Atualizando cliente ID: {}", id);
 
         ClienteModel cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
@@ -121,7 +117,7 @@ public class ClienteService {
 
     @Transactional
     public void deletar(Integer id) {
-        log.info("🗑️ Deletando cliente ID: {}", id);
+        log.info("Deletando cliente ID: {}", id);
 
         ClienteModel cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));

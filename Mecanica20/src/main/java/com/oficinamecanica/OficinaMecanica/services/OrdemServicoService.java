@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrdemServicoService {
 
-
-
     private final OrdemServicoRepository ordemServicoRepository;
     private final ClienteRepository clienteRepository;
     private final VeiculoRepository veiculoRepository;
@@ -151,7 +149,7 @@ public class OrdemServicoService {
 
     @Transactional
     public OrdemServicoResponseDTO aprovarOrcamento(Integer id, LocalDate dataAgendamento) {
-        log.info("📋 Aprovando orçamento ID: {}", id);
+        log.info("Aprovando orçamento ID: {}", id);
 
         OrdemServicoModel ordem = ordemServicoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ordem não encontrada"));

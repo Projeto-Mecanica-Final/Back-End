@@ -13,11 +13,7 @@ import java.util.List;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<AgendamentoModel, Integer> {
 
-    List<AgendamentoModel> findByStatus(Status status);
-
     List<AgendamentoModel> findByMecanico_CdUsuario(Integer cdMecanico);
-
-    List<AgendamentoModel> findByCdCliente_CdCliente(Integer cdCliente);
 
     @Query("SELECT a FROM AgendamentoModel a WHERE a.dataAgendamento >= :dataAtual AND a.status = 'AGENDADO'")
     List<AgendamentoModel> findAgendamentosFuturos(@Param("dataAtual") LocalDate dataAtual);

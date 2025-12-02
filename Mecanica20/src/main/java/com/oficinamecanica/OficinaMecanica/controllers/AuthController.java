@@ -34,13 +34,10 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
     private final UsuarioService usuarioService;
 
-    /**
-     * ✅ ENDPOINT POST - Login com email e senha
-     */
     @PostMapping("/login")
     @Operation(summary = "Login com email e senha", description = "Retorna token JWT para autenticação")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
-        log.info("🔐 Tentativa de login: {}", loginRequest.email());
+        log.info("Tentativa de login: {}", loginRequest.email());
 
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -61,63 +58,54 @@ public class AuthController {
                     usuario
             );
 
-            log.info("✅ Login bem-sucedido: {}", loginRequest.email());
+            log.info("Login bem-sucedido: {}", loginRequest.email());
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ Erro no login: {}", e.getMessage());
+            log.error("Erro no login: {}", e.getMessage());
             throw e;
         }
     }
 
-    /**
-     * ✅ ENDPOINT POST - Registrar novo usuário
-     */
     @PostMapping("/register")
     @Operation(summary = "Registrar novo usuário", description = "Cadastra um novo usuário LOCAL (com senha)")
     public ResponseEntity<UsuarioResponseDTO> register(@Valid @RequestBody UsuarioDTO dto) {
-        log.info("📝 Registrando novo usuário: {}", dto.email());
+        log.info("Registrando novo usuário: {}", dto.email());
         UsuarioResponseDTO response = usuarioService.criar(dto);
-        log.info("✅ Usuário registrado com sucesso: {}", dto.email());
+        log.info("Usuário registrado com sucesso: {}", dto.email());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * ✅ ENDPOINT GET - Obter usuário autenticado (USADO PELO FRONTEND APÓS OAUTH2)
-     */
     @GetMapping("/me")
     @Operation(summary = "Obter usuário autenticado", description = "Retorna dados do usuário logado (usado após OAuth2)")
     public ResponseEntity<UsuarioResponseDTO> getCurrentUser(Authentication authentication) {
-        // ✅ Verificação adicional de segurança
+
         if (authentication == null || !authentication.isAuthenticated()) {
-            log.warn("⚠️ Tentativa de acesso /me sem autenticação");
+            log.warn("Tentativa de acesso /me sem autenticação");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String email = authentication.getName();
-        log.info("📋 Buscando dados do usuário: {}", email);
+        log.info("Buscando dados do usuário: {}", email);
 
         try {
             UsuarioResponseDTO usuario = usuarioService.buscarPorEmail(email);
-            log.info("✅ Dados do usuário retornados: {}", email);
+            log.info("Dados do usuário retornados: {}", email);
             return ResponseEntity.ok(usuario);
 
         } catch (Exception e) {
-            log.error("❌ Erro ao buscar usuário {}: {}", email, e.getMessage());
+            log.error("Erro ao buscar usuário {}: {}", email, e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    /**
-     * ✅ ENDPOINT GET - Callback OAuth2 (ALTERNATIVO - não usado se o Handler funcionar)
-     */
     @GetMapping("/oauth2/callback")
     @Operation(summary = "Callback OAuth2 alternativo")
     public void oauth2Callback(HttpServletResponse response, Authentication authentication) throws IOException {
-        log.info("🔄 Callback OAuth2 acionado");
+        log.info("Callback OAuth2 acionado");
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            log.error("❌ Callback OAuth2 sem autenticação");
+            log.error("Callback OAuth2 sem autenticação");
             response.sendRedirect("http://localhost:4200/auth/login?error=no_auth");
             return;
         }
@@ -126,28 +114,22 @@ public class AuthController {
         String token = tokenProvider.generateToken(authentication);
 
         String redirectUrl = "http://localhost:4200/auth/callback?token=" + token;
-        log.info("🔗 Redirecionando OAuth2 para: {}", redirectUrl);
+        log.info("Redirecionando OAuth2 para: {}", redirectUrl);
 
         response.sendRedirect(redirectUrl);
     }
 
-    /**
-     * ✅ ENDPOINT GET - Sucesso OAuth2
-     */
     @GetMapping("/oauth2/success")
     @Operation(summary = "Callback de sucesso OAuth2")
     public ResponseEntity<String> oauth2Success() {
-        log.info("✅ OAuth2 Success endpoint acionado");
+        log.info("OAuth2 Success endpoint acionado");
         return ResponseEntity.ok("Autenticação OAuth2 realizada com sucesso! Você pode fechar esta janela.");
     }
 
-    /**
-     * ✅ ENDPOINT GET - Falha OAuth2
-     */
     @GetMapping("/oauth2/failure")
     @Operation(summary = "Callback de falha OAuth2")
     public ResponseEntity<String> oauth2Failure() {
-        log.error("❌ OAuth2 Failure endpoint acionado");
+        log.error("OAuth2 Failure endpoint acionado");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("Falha na autenticação OAuth2. Tente novamente.");
     }

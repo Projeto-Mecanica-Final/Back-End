@@ -31,9 +31,6 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServicoModel,
             "WHERE o.cdOrdemServico = :id")
     OrdemServicoModel findByIdWithItens(@Param("id") Integer id);
 
-    // =============================
-    // 🚀 FETCH BÁSICO PARA LISTAGEM
-    // =============================
     @Query("SELECT DISTINCT o FROM OrdemServicoModel o " +
             "LEFT JOIN FETCH o.clienteModel " +
             "LEFT JOIN FETCH o.veiculo " +

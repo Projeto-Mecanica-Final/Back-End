@@ -9,7 +9,6 @@ import java.util.List;
 @Repository
 public interface ServicoRepository extends JpaRepository<ServicoModel, Integer> {
 
-
     List<ServicoModel> findByAtivoTrue();
 
     List<ServicoModel> findByNmServicoContainingIgnoreCase(String nmServico);

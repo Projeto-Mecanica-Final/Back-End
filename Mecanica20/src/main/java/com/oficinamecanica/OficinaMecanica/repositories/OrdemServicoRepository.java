@@ -14,10 +14,6 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServicoModel,
 
     List<OrdemServicoModel> findByStatus(Status status);
 
-    List<OrdemServicoModel> findByMecanico_CdUsuario(Integer cdMecanico);
-
-    List<OrdemServicoModel> findByClienteModel_CdCliente(Integer cdCliente);
-
     @Query("SELECT o FROM OrdemServicoModel o WHERE o.tipoOrdemOrcamento = 'ORCAMENTO' AND o.aprovado = false")
     List<OrdemServicoModel> findOrcamentosPendentes();
 

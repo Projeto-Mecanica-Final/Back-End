@@ -12,12 +12,6 @@ import java.util.Optional;
 @Repository
 public interface VeiculoRepository extends JpaRepository<VeiculoModel, Integer> {
 
-    @Query("SELECT v FROM VeiculoModel v LEFT JOIN FETCH v.clienteModel")
-    List<VeiculoModel> findAllWithCliente();
-
-    @Query("SELECT v FROM VeiculoModel v LEFT JOIN FETCH v.clienteModel WHERE v.cdVeiculo = :id")
-    Optional<VeiculoModel> findByIdWithCliente(@Param("id") Integer id);
-
     Optional<VeiculoModel> findByPlaca(String placa);
 
     boolean existsByPlaca(String placa);
